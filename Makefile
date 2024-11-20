@@ -1,8 +1,9 @@
 CXX ?= g++
-CXX_FLAGS := -std=c++14 $\
-						 -O2 -march=x86-64 -pipe $\
-						 -Wall -Wextra -Wpedantic -Wno-unused-parameter $\
-						 -Iinclude -I.
+CXXFLAGS ?= -O2 -march=x86-64 -pipe
+
+COMMONFLAGS := -std=c99 $\
+							 -Wall -Wextra -Wpedantic -Wno-unused-parameter $\
+							 -Iinclude
 
 OBJECT_FILES := $(patsubst src/%.cpp,$\
 									build/%.o,$\
@@ -22,7 +23,7 @@ PSH_REQUIREMENTS := ${PROCESSED_HEADER_FILES} ${OBJECT_FILES}
 CLEANUP_FILES := $(shell find -name '*~')
 
 define COMPILE
-${CXX} -c $1 ${CXX_FLAGS} -o $2
+${CXX} -c $1 ${CXXFLAGS} ${COMMONFLAGS} -o $2
 
 endef
 define REMOVE
@@ -39,7 +40,7 @@ endef
 all: psh
 
 psh: ${PSH_REQUIREMENTS}
-	${CXX} ${OBJECT_FILES} ${CXX_FLAGS} -o psh
+	${CXX} ${OBJECT_FILES} ${CXXFLAGS} ${COMMONFLAGS} -o psh
 
 build/%.o: src/%.cpp
 	$(call COMPILE,$<,$@)
